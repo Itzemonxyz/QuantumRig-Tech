@@ -47,17 +47,8 @@ if (process.env.VITE_FIREBASE_API_KEY) {
     appId: process.env.VITE_FIREBASE_APP_ID,
     firestoreDatabaseId: process.env.VITE_FIREBASE_FIRESTORE_DATABASE_ID || "(default)"
   };
-} else {
-  firebaseConfig = {
-    apiKey: "AIzaSyDYoNvGjDRk-HDFhuTpF4eaYJExqDyF1p0",
-    authDomain: "emonxyz-48285.firebaseapp.com",
-    projectId: "emonxyz-48285",
-    storageBucket: "emonxyz-48285.firebasestorage.app",
-    messagingSenderId: "1035995553022",
-    appId: "1:1035995553022:web:a5843d6cb15f10464c99af",
-    firestoreDatabaseId: "(default)"
-  };
 }
+
 
 if (firebaseConfig) {
   const firebaseApp = initializeApp(firebaseConfig);
