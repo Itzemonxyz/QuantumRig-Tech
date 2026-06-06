@@ -50,7 +50,7 @@ try {
 
   if (firebaseConfig) {
     const firebaseApp = initializeApp(firebaseConfig);
-    const firestoreSettings = { experimentalForceLongPolling: true };
+    const firestoreSettings = process.env.VERCEL ? {} : { experimentalForceLongPolling: true };
     if (firebaseConfig.firestoreDatabaseId && firebaseConfig.firestoreDatabaseId !== "(default)") {
       db = initializeFirestore(firebaseApp, firestoreSettings, firebaseConfig.firestoreDatabaseId);
     } else {
