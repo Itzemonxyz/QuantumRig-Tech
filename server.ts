@@ -50,8 +50,9 @@ try {
 
   if (firebaseConfig) {
     const firebaseApp = initializeApp(firebaseConfig);
-    db = initializeFirestore(firebaseApp, { experimentalForceLongPolling: true }, firebaseConfig.firestoreDatabaseId || "(default)");
-    console.log("🔥 Connected to Firebase Firestore with Long Polling");
+    const firestoreSettings = process.env.VERCEL ? {} : { experimentalForceLongPolling: true };
+    db = initializeFirestore(firebaseApp, firestoreSettings, firebaseConfig.firestoreDatabaseId || "(default)");
+    console.log("🔥 Connected to Firebase Firestore", process.env.VERCEL ? "in Vercel (Auto Polling)" : "with Long Polling");
   }
 } catch (error) {
   console.error("Firebase initialization failed:", error);
@@ -126,16 +127,14 @@ async function syncDatabase() {
       
       // Just load products
       // No code rewriting
-      for (const p of products) {
+      await Promise.all(products.map(async (p) => {
         if (!p.code) {
           p.code = p.id;
           await setDoc(doc(db, "products", p.id), JSON.parse(JSON.stringify(p))).catch(console.error);
         }
-      }
+      }));
     } else {
-      for (const p of products) {
-        await setDoc(doc(db, "products", p.id), JSON.parse(JSON.stringify(p)));
-      }
+      await Promise.all(products.map(p => setDoc(doc(db, "products", p.id), JSON.parse(JSON.stringify(p)))));
     }
 
     // 2. Sync Categories
@@ -143,9 +142,7 @@ async function syncDatabase() {
     if (!cSnap.empty) {
       categories = cSnap.docs.map((d: any) => d.data() as Category);
     } else {
-      for (const c of categories) {
-        await setDoc(doc(db, "categories", c.id), JSON.parse(JSON.stringify(c)));
-      }
+      await Promise.all(categories.map(c => setDoc(doc(db, "categories", c.id), JSON.parse(JSON.stringify(c)))));
     }
 
     // 3. Sync Brands
@@ -153,9 +150,7 @@ async function syncDatabase() {
     if (!bSnap.empty) {
       brands = bSnap.docs.map((d: any) => d.data() as Brand);
     } else {
-      for (const b of brands) {
-        await setDoc(doc(db, "brands", b.id), JSON.parse(JSON.stringify(b)));
-      }
+      await Promise.all(brands.map(b => setDoc(doc(db, "brands", b.id), JSON.parse(JSON.stringify(b)))));
     }
 
     // 4. Sync Users 
@@ -177,9 +172,7 @@ async function syncDatabase() {
       // Clean up any stray mock orders from the DB
       const mockOrdersToDelete = orders.filter(o => o.id && o.id.startsWith("mock_"));
       if (mockOrdersToDelete.length > 0) {
-        for (const mo of mockOrdersToDelete) {
-          await deleteDoc(doc(db, "orders", mo.id)).catch(console.error);
-        }
+        await Promise.all(mockOrdersToDelete.map(mo => deleteDoc(doc(db, "orders", mo.id)).catch(console.error)));
         orders = orders.filter(o => !o.id || !o.id.startsWith("mock_"));
       }
     } // if empty, do not seed mock orders to avoid bloat
@@ -222,9 +215,7 @@ async function syncDatabase() {
     if (!slSnap.empty) {
       socialLinks = slSnap.docs.map((d: any) => d.data() as SocialLink);
     } else {
-      for (const sl of socialLinks) {
-        await setDoc(doc(db, "social_links", sl.id), JSON.parse(JSON.stringify(sl))).catch(console.error);
-      }
+      await Promise.all(socialLinks.map(sl => setDoc(doc(db, "social_links", sl.id), JSON.parse(JSON.stringify(sl))).catch(console.error)));
     }
 
     // 12. Sync Complaints

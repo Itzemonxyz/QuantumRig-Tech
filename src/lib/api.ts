@@ -2,11 +2,7 @@ import { useStore } from '../store';
 
 const handleError = (error: any, endpoint: string) => {
   const message = error.message || `Failed to fetch ${endpoint}`;
-  useStore.getState().addToast({
-    title: 'Network Error',
-    message,
-    type: 'error'
-  });
+  useStore.getState().addToast(message, 'error');
   throw error;
 };
 
