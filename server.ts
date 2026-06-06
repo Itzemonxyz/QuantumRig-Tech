@@ -35,12 +35,9 @@ app.use((req, res, next) => {
 
 // ================= FIREBASE SETUP =================
 let db: any = null;
-const firebaseConfigPath = path.join(process.cwd(), "firebase-applet-config.json");
 let firebaseConfig = null;
 
-if (fs.existsSync(firebaseConfigPath)) {
-  firebaseConfig = JSON.parse(fs.readFileSync(firebaseConfigPath, "utf-8"));
-} else if (process.env.VITE_FIREBASE_API_KEY) {
+if (process.env.VITE_FIREBASE_API_KEY) {
   firebaseConfig = {
     apiKey: process.env.VITE_FIREBASE_API_KEY,
     authDomain: process.env.VITE_FIREBASE_AUTH_DOMAIN,
@@ -49,6 +46,16 @@ if (fs.existsSync(firebaseConfigPath)) {
     messagingSenderId: process.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
     appId: process.env.VITE_FIREBASE_APP_ID,
     firestoreDatabaseId: process.env.VITE_FIREBASE_FIRESTORE_DATABASE_ID || "(default)"
+  };
+} else {
+  firebaseConfig = {
+    apiKey: "AIzaSyDYoNvGjDRk-HDFhuTpF4eaYJExqDyF1p0",
+    authDomain: "emonxyz-48285.firebaseapp.com",
+    projectId: "emonxyz-48285",
+    storageBucket: "emonxyz-48285.firebasestorage.app",
+    messagingSenderId: "1035995553022",
+    appId: "1:1035995553022:web:a5843d6cb15f10464c99af",
+    firestoreDatabaseId: "(default)"
   };
 }
 
