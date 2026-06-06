@@ -50,9 +50,13 @@ try {
 
   if (firebaseConfig) {
     const firebaseApp = initializeApp(firebaseConfig);
-    const firestoreSettings = process.env.VERCEL ? {} : { experimentalForceLongPolling: true };
-    db = initializeFirestore(firebaseApp, firestoreSettings, firebaseConfig.firestoreDatabaseId || "(default)");
-    console.log("🔥 Connected to Firebase Firestore", process.env.VERCEL ? "in Vercel (Auto Polling)" : "with Long Polling");
+    const firestoreSettings = { experimentalForceLongPolling: true };
+    if (firebaseConfig.firestoreDatabaseId && firebaseConfig.firestoreDatabaseId !== "(default)") {
+      db = initializeFirestore(firebaseApp, firestoreSettings, firebaseConfig.firestoreDatabaseId);
+    } else {
+      db = initializeFirestore(firebaseApp, firestoreSettings);
+    }
+    console.log("🔥 Connected to Firebase Firestore with Long Polling");
   }
 } catch (error) {
   console.error("Firebase initialization failed:", error);
