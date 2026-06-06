@@ -22,7 +22,8 @@ console.error = (...args) => {
 };
 
 app.use(cors());
-app.use(express.json());
+app.use(express.json({ limit: '50mb' }));
+app.use(express.urlencoded({ extended: true, limit: '50mb' }));
 
 app.use((req, res, next) => {
   res.set('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate');
@@ -237,7 +238,7 @@ async function syncDatabase() {
     console.warn("Firestore Sync Error (rules may not open yet):", error);
   }
 }
-syncDatabase();
+// syncDatabase() is now called and awaited inside startServer()
 
 // ================= API ROUTES =================
 
@@ -952,6 +953,8 @@ app.get("/api/admin/analytics", (req, res) => {
 
 // Vite & Static file serving
 async function startServer() {
+  await syncDatabase();
+
   if (process.env.VERCEL) {
     return; // Vercel handles static routing and starts the function automatically
   }

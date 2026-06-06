@@ -46,14 +46,16 @@ export default function App() {
     const boot = async () => {
       setIsLoading(true);
       try {
-        const [cats, brnds, prods, ofrs, sets, slinks] = await Promise.all([
-          api.get('/categories'),
-          api.get('/brands'),
-          api.get('/products'),
-          api.get('/offers'),
-          api.get('/settings'),
-          api.get('/social-links')
+        const results = await Promise.all([
+          api.get('/categories').catch(() => []),
+          api.get('/brands').catch(() => []),
+          api.get('/products').catch(() => []),
+          api.get('/offers').catch(() => []),
+          api.get('/settings').catch(() => null),
+          api.get('/social-links').catch(() => [])
         ]);
+        
+        const [cats, brnds, prods, ofrs, sets, slinks] = results;
         
         setCategories(cats || []);
         setBrands(brnds || []);

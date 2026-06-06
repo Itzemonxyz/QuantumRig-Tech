@@ -1,77 +1,105 @@
+import { useStore } from '../store';
+
+const handleError = (error: any, endpoint: string) => {
+  const message = error.message || `Failed to fetch ${endpoint}`;
+  useStore.getState().addToast({
+    title: 'Network Error',
+    message,
+    type: 'error'
+  });
+  throw error;
+};
+
 export const api = {
   get: async (endpoint: string, token?: string | null) => {
-    const timestamp = Date.now();
-    const url = endpoint.includes('?') ? `/api${endpoint}&_t=${timestamp}` : `/api${endpoint}?_t=${timestamp}`;
-    const res = await fetch(url, {
-      headers: {
-        ...(token ? { 'Authorization': `Bearer ${token}` } : {})
-      }
-    });
-    if (!res.ok) {
-      const errText = await res.text();
-      let err;
-      try { err = JSON.parse(errText); } catch { err = { error: `Failed to fetch ${endpoint} (Status: ${res.status} ${res.statusText}): ${errText.substring(0, 50)}` }; }
-      throw new Error(err.error || `Failed to fetch ${endpoint} (Status: ${res.status})`);
-    }
-    const text = await res.text();
     try {
-      return JSON.parse(text);
-    } catch {
-      return null;
+      const timestamp = Date.now();
+      const url = endpoint.includes('?') ? `/api${endpoint}&_t=${timestamp}` : `/api${endpoint}?_t=${timestamp}`;
+      const res = await fetch(url, {
+        headers: {
+          ...(token ? { 'Authorization': `Bearer ${token}` } : {})
+        }
+      });
+      if (!res.ok) {
+        const errText = await res.text();
+        let err;
+        try { err = JSON.parse(errText); } catch { err = { error: `Failed to fetch ${endpoint} (Status: ${res.status} ${res.statusText}): ${errText.substring(0, 50)}` }; }
+        throw new Error(err.error || `Failed to fetch ${endpoint} (Status: ${res.status})`);
+      }
+      const text = await res.text();
+      try {
+        return JSON.parse(text);
+      } catch {
+        return null;
+      }
+    } catch (err: any) {
+      handleError(err, endpoint);
     }
   },
   post: async (endpoint: string, data: any, token?: string | null) => {
-    const res = await fetch(`/api${endpoint}`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        ...(token ? { 'Authorization': `Bearer ${token}` } : {})
-      },
-      body: JSON.stringify(data)
-    });
-    if (!res.ok) {
-      const errText = await res.text();
-      let err;
-      try { err = JSON.parse(errText); } catch { err = { error: `Failed to post ${endpoint} (Status: ${res.status} ${res.statusText}): ${errText.substring(0, 50)}` }; }
-      throw new Error(err.error || `Failed to post ${endpoint} (Status: ${res.status})`);
-    }
-    const text = await res.text();
-    try { return JSON.parse(text); } catch { return null; }
-  },
-  put: async (endpoint: string, data: any, token?: string | null) => {
-    const res = await fetch(`/api${endpoint}`, {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json',
-        ...(token ? { 'Authorization': `Bearer ${token}` } : {})
-      },
-      body: JSON.stringify(data)
-    });
-    if (!res.ok) {
-      const errText = await res.text();
-      let err;
-      try { err = JSON.parse(errText); } catch { err = { error: errText || `Failed to put ${endpoint}` }; }
-      throw new Error(err.error || `Failed to put ${endpoint}`);
-    }
-    const text = await res.text();
-    try { return JSON.parse(text); } catch { return null; }
-  },
-  delete: async (endpoint: string, token?: string | null) => {
-    const res = await fetch(`/api${endpoint}`, {
-      method: 'DELETE',
-      headers: {
-        ...(token ? { 'Authorization': `Bearer ${token}` } : {})
+    try {
+      const res = await fetch(`/api${endpoint}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          ...(token ? { 'Authorization': `Bearer ${token}` } : {})
+        },
+        body: JSON.stringify(data)
+      });
+      if (!res.ok) {
+        const errText = await res.text();
+        let err;
+        try { err = JSON.parse(errText); } catch { err = { error: `Failed to post ${endpoint} (Status: ${res.status} ${res.statusText}): ${errText.substring(0, 50)}` }; }
+        throw new Error(err.error || `Failed to post ${endpoint} (Status: ${res.status})`);
       }
-    });
-    if (!res.ok) {
-      const errText = await res.text();
-      let err;
-      try { err = JSON.parse(errText); } catch { err = { error: errText || `Failed to delete ${endpoint}` }; }
-      throw new Error(err.error || `Failed to delete ${endpoint}`);
-    }
-    if (res.status !== 204) {
       const text = await res.text();
       try { return JSON.parse(text); } catch { return null; }
+    } catch (err: any) {
+      handleError(err, endpoint);
+    }
+  },
+  put: async (endpoint: string, data: any, token?: string | null) => {
+    try {
+      const res = await fetch(`/api${endpoint}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          ...(token ? { 'Authorization': `Bearer ${token}` } : {})
+        },
+        body: JSON.stringify(data)
+      });
+      if (!res.ok) {
+        const errText = await res.text();
+        let err;
+        try { err = JSON.parse(errText); } catch { err = { error: errText || `Failed to put ${endpoint}` }; }
+        throw new Error(err.error || `Failed to put ${endpoint}`);
+      }
+      const text = await res.text();
+      try { return JSON.parse(text); } catch { return null; }
+    } catch (err: any) {
+      handleError(err, endpoint);
+    }
+  },
+  delete: async (endpoint: string, token?: string | null) => {
+    try {
+      const res = await fetch(`/api${endpoint}`, {
+        method: 'DELETE',
+        headers: {
+          ...(token ? { 'Authorization': `Bearer ${token}` } : {})
+        }
+      });
+      if (!res.ok) {
+        const errText = await res.text();
+        let err;
+        try { err = JSON.parse(errText); } catch { err = { error: errText || `Failed to delete ${endpoint}` }; }
+        throw new Error(err.error || `Failed to delete ${endpoint}`);
+      }
+      if (res.status !== 204) {
+        const text = await res.text();
+        try { return JSON.parse(text); } catch { return null; }
+      }
+    } catch (err: any) {
+      handleError(err, endpoint);
     }
   }
 };
