@@ -238,7 +238,24 @@ async function syncDatabase() {
     console.warn("Firestore Sync Error (rules may not open yet):", error);
   }
 }
-// syncDatabase() is now called and awaited inside startServer()
+
+let dbSyncPromise: Promise<void> | null = null;
+function ensureDbSynced() {
+  if (!dbSyncPromise) {
+    dbSyncPromise = syncDatabase();
+  }
+  return dbSyncPromise;
+}
+
+// Ensure database is synced before handling any API request
+app.use('/api', async (req, res, next) => {
+  try {
+    await ensureDbSynced();
+    next();
+  } catch (error) {
+    next(error);
+  }
+});
 
 // ================= API ROUTES =================
 
@@ -953,7 +970,7 @@ app.get("/api/admin/analytics", (req, res) => {
 
 // Vite & Static file serving
 async function startServer() {
-  await syncDatabase();
+  await ensureDbSynced();
 
   if (process.env.VERCEL) {
     return; // Vercel handles static routing and starts the function automatically
