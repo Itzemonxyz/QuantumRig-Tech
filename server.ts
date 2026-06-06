@@ -10,7 +10,7 @@ setLogLevel('silent');
 
 
 const app = express();
-const PORT = process.env.PORT ? parseInt(process.env.PORT, 10) : 3000;
+const PORT = 3000;
 
 const originalConsoleError = console.error;
 console.error = (...args) => {
@@ -38,7 +38,7 @@ let firebaseConfig = null;
 
 try {
   firebaseConfig = {
-    apiKey: process.env.VITE_FIREBASE_API_KEY || process.env.FIREBASE_API_KEY || ["AIzaSyDYoNv", "GjDRk-HDFh", "uTpF4eaYJE", "xqDyF1p0"].join(""),
+    apiKey: process.env.VITE_FIREBASE_API_KEY || process.env.FIREBASE_API_KEY || "AIzaSyDYoNvGjDRk-HDFhuTpF4eaYJExqDyF1p0",
     authDomain: process.env.VITE_FIREBASE_AUTH_DOMAIN || process.env.FIREBASE_AUTH_DOMAIN || "emonxyz-48285.firebaseapp.com",
     projectId: process.env.VITE_FIREBASE_PROJECT_ID || process.env.FIREBASE_PROJECT_ID || "emonxyz-48285",
     storageBucket: process.env.VITE_FIREBASE_STORAGE_BUCKET || process.env.FIREBASE_STORAGE_BUCKET || "emonxyz-48285.firebasestorage.app",

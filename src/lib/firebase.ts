@@ -7,7 +7,7 @@ setLogLevel('silent');
 
 
 const firebaseConfig = {
-  apiKey: import.meta.env.VITE_FIREBASE_API_KEY || ["AIzaSyDYoNv", "GjDRk-HDFh", "uTpF4eaYJE", "xqDyF1p0"].join(""),
+  apiKey: import.meta.env.VITE_FIREBASE_API_KEY || "AIzaSyDYoNvGjDRk-HDFhuTpF4eaYJExqDyF1p0",
   authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN || "emonxyz-48285.firebaseapp.com",
   projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID || "emonxyz-48285",
   storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET || "emonxyz-48285.firebasestorage.app",
