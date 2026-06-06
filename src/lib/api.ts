@@ -10,8 +10,8 @@ export const api = {
     if (!res.ok) {
       const errText = await res.text();
       let err;
-      try { err = JSON.parse(errText); } catch { err = { error: errText || `Failed to fetch ${endpoint}` }; }
-      throw new Error(err.error || `Failed to fetch ${endpoint}`);
+      try { err = JSON.parse(errText); } catch { err = { error: `Failed to fetch ${endpoint} (Status: ${res.status} ${res.statusText}): ${errText.substring(0, 50)}` }; }
+      throw new Error(err.error || `Failed to fetch ${endpoint} (Status: ${res.status})`);
     }
     const text = await res.text();
     try {
@@ -32,8 +32,8 @@ export const api = {
     if (!res.ok) {
       const errText = await res.text();
       let err;
-      try { err = JSON.parse(errText); } catch { err = { error: errText || `Failed to post ${endpoint}` }; }
-      throw new Error(err.error || `Failed to post ${endpoint}`);
+      try { err = JSON.parse(errText); } catch { err = { error: `Failed to post ${endpoint} (Status: ${res.status} ${res.statusText}): ${errText.substring(0, 50)}` }; }
+      throw new Error(err.error || `Failed to post ${endpoint} (Status: ${res.status})`);
     }
     const text = await res.text();
     try { return JSON.parse(text); } catch { return null; }
