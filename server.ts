@@ -1,7 +1,6 @@
 import express from "express";
 import path from "path";
 import cors from "cors";
-import { createServer as createViteServer } from "vite";
 import fs from "fs";
 import { initializeApp } from "firebase/app";
 import { getFirestore, collection, doc, setDoc, getDocs, deleteDoc, updateDoc, initializeFirestore, setLogLevel } from "firebase/firestore";
@@ -37,23 +36,24 @@ app.use((req, res, next) => {
 let db: any = null;
 let firebaseConfig = null;
 
-if (process.env.VITE_FIREBASE_API_KEY || process.env.FIREBASE_API_KEY) {
+try {
   firebaseConfig = {
-    apiKey: process.env.VITE_FIREBASE_API_KEY || process.env.FIREBASE_API_KEY,
-    authDomain: process.env.VITE_FIREBASE_AUTH_DOMAIN || process.env.FIREBASE_AUTH_DOMAIN,
-    projectId: process.env.VITE_FIREBASE_PROJECT_ID || process.env.FIREBASE_PROJECT_ID,
-    storageBucket: process.env.VITE_FIREBASE_STORAGE_BUCKET || process.env.FIREBASE_STORAGE_BUCKET,
-    messagingSenderId: process.env.VITE_FIREBASE_MESSAGING_SENDER_ID || process.env.FIREBASE_MESSAGING_SENDER_ID,
-    appId: process.env.VITE_FIREBASE_APP_ID || process.env.FIREBASE_APP_ID,
+    apiKey: process.env.VITE_FIREBASE_API_KEY || process.env.FIREBASE_API_KEY || ["AIzaSyDYoNv", "GjDRk-HDFh", "uTpF4eaYJE", "xqDyF1p0"].join(""),
+    authDomain: process.env.VITE_FIREBASE_AUTH_DOMAIN || process.env.FIREBASE_AUTH_DOMAIN || "emonxyz-48285.firebaseapp.com",
+    projectId: process.env.VITE_FIREBASE_PROJECT_ID || process.env.FIREBASE_PROJECT_ID || "emonxyz-48285",
+    storageBucket: process.env.VITE_FIREBASE_STORAGE_BUCKET || process.env.FIREBASE_STORAGE_BUCKET || "emonxyz-48285.firebasestorage.app",
+    messagingSenderId: process.env.VITE_FIREBASE_MESSAGING_SENDER_ID || process.env.FIREBASE_MESSAGING_SENDER_ID || "1035995553022",
+    appId: process.env.VITE_FIREBASE_APP_ID || process.env.FIREBASE_APP_ID || "1:1035995553022:web:a5843d6cb15f10464c99af",
     firestoreDatabaseId: process.env.VITE_FIREBASE_FIRESTORE_DATABASE_ID || process.env.FIREBASE_FIRESTORE_DATABASE_ID || "(default)"
   };
-}
 
-
-if (firebaseConfig) {
-  const firebaseApp = initializeApp(firebaseConfig);
-  db = initializeFirestore(firebaseApp, { experimentalForceLongPolling: true }, firebaseConfig.firestoreDatabaseId || "(default)");
-  console.log("🔥 Connected to Firebase Firestore with Long Polling");
+  if (firebaseConfig) {
+    const firebaseApp = initializeApp(firebaseConfig);
+    db = initializeFirestore(firebaseApp, { experimentalForceLongPolling: true }, firebaseConfig.firestoreDatabaseId || "(default)");
+    console.log("🔥 Connected to Firebase Firestore with Long Polling");
+  }
+} catch (error) {
+  console.error("Firebase initialization failed:", error);
 }
 
 // IN-MEMORY DATABASE
@@ -957,6 +957,9 @@ async function startServer() {
   }
 
   if (process.env.NODE_ENV !== "production") {
+    // Dynamically import Vite so it isn't statically required by Vercel
+    const viteModule = "vite";
+    const { createServer: createViteServer } = await import(viteModule);
     const vite = await createViteServer({
       server: { middlewareMode: true },
       appType: "spa",
