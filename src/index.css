@@ -1,0 +1,44 @@
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Outfit", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "Outfit", ui-sans-serif, system-ui, sans-serif;
+}
+
+html, body {
+  font-family: var(--font-sans);
+}
+
+/* Custom font overrides to enforce complete consistency and minimal vibe */
+svg text, 
+.recharts-text, 
+.recharts-tooltip-wrapper, 
+.recharts-default-tooltip,
+input,
+select,
+textarea,
+button {
+  font-family: "Outfit", ui-sans-serif, system-ui, sans-serif !important;
+}
+
+@keyframes marquee {
+  0% { transform: translateX(100vw); }
+  100% { transform: translateX(-100%); }
+}
+.animate-marquee {
+  display: inline-block;
+  animation: marquee 20s linear infinite;
+  white-space: nowrap;
+}
+
+/* Hide scrollbar for Chrome, Safari and Opera */
+*::-webkit-scrollbar {
+  display: none;
+}
+
+/* Hide scrollbar for IE, Edge and Firefox */
+* {
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+}

@@ -1,0 +1,8 @@
+{
+  "name": "QuantumRig Tech (Vercel)",
+  "description": "A professional-grade e-commerce website for tech products and custom PC building.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}

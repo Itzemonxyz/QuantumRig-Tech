@@ -1,0 +1,236 @@
+{
+  "entities": {
+    "User": {
+      "title": "User",
+      "description": "User profile data",
+      "type": "object",
+      "properties": {
+        "name": { "type": "string" },
+        "email": { "type": "string" },
+        "role": { "type": "string", "enum": ["admin", "user"] },
+        "savedProductIds": { "type": "array" },
+        "loyaltyPoints": { "type": "number" }
+      },
+      "required": ["name", "email", "role"]
+    },
+    "Category": {
+      "title": "Category",
+      "description": "Product category",
+      "type": "object",
+      "properties": {
+        "name": { "type": "string" },
+        "slug": { "type": "string" }
+      }
+    },
+    "Brand": {
+      "title": "Brand",
+      "description": "Product brand",
+      "type": "object",
+      "properties": {
+        "name": { "type": "string" },
+        "slug": { "type": "string" }
+      }
+    },
+    "Product": {
+      "title": "Product",
+      "description": "Product inventory",
+      "type": "object",
+      "properties": {
+        "code": { "type": "string" },
+        "title": { "type": "string" },
+        "slug": { "type": "string" },
+        "categoryId": { "type": "string" },
+        "brand": { "type": "string" },
+        "price": { "type": "number" },
+        "discountPrice": { "type": "number" },
+        "stockStatus": { "type": "string" },
+        "inventoryCount": { "type": "number" },
+        "imageUrl": { "type": "string" },
+        "additionalImages": { "type": "array" },
+        "description": { "type": "string" },
+        "specs": { "type": "object" },
+        "socket": { "type": "string" },
+        "wattage": { "type": "number" }
+      },
+      "required": ["title", "slug", "categoryId", "price", "stockStatus", "imageUrl"]
+    },
+    "Review": {
+      "title": "Review",
+      "description": "Product review",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string" },
+        "userName": { "type": "string" },
+        "rating": { "type": "number" },
+        "comment": { "type": "string" },
+        "createdAt": { "type": "string" }
+      },
+      "required": ["userId", "rating", "comment", "createdAt"]
+    },
+    "Order": {
+      "title": "Order",
+      "description": "Customer order",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string" },
+        "items": { "type": "array" },
+        "totalAmount": { "type": "number" },
+        "status": { "type": "string" },
+        "deliveryDetails": { "type": "object" },
+        "trackingHistory": { "type": "array" },
+        "couponCode": { "type": "string" },
+        "discountAmount": { "type": "number" },
+        "paymentMethod": { "type": "string" },
+        "transactionId": { "type": "string" },
+        "paymentStatus": { "type": "string" },
+        "createdAt": { "type": "string" }
+      },
+      "required": ["userId", "items", "totalAmount", "status", "deliveryDetails", "createdAt"]
+    },
+    "Coupon": {
+      "title": "Coupon",
+      "description": "Discount coupon",
+      "type": "object",
+      "properties": {
+        "code": { "type": "string" },
+        "discountPercentage": { "type": "number" },
+        "isActive": { "type": "boolean" },
+        "applicableProductIds": { "type": "array" }
+      },
+      "required": ["code", "discountPercentage", "isActive"]
+    },
+    "Settings": {
+      "title": "Settings",
+      "description": "Global settings",
+      "type": "object",
+      "properties": {
+        "announcementText": { "type": "string" },
+        "facebookUrl": { "type": "string" },
+        "whatsappUrl": { "type": "string" },
+        "instagramUrl": { "type": "string" }
+      }
+    },
+    "Restock": {
+      "title": "Restock",
+      "description": "Restock request",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "userId": { "type": "string" },
+        "userName": { "type": "string" },
+        "userEmail": { "type": "string" },
+        "productId": { "type": "string" },
+        "productTitle": { "type": "string" },
+        "status": { "type": "string", "enum": ["pending", "fulfilled"] },
+        "createdAt": { "type": "string" }
+      },
+      "required": ["id", "userId", "userName", "userEmail", "productId", "productTitle", "status", "createdAt"]
+    },
+    "Support": {
+      "title": "Support",
+      "description": "Support Ticket",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "productId": { "type": "string" },
+        "email": { "type": "string" },
+        "question": { "type": "string" },
+        "status": { "type": "string", "enum": ["Open", "Closed"] },
+        "createdAt": { "type": "string" }
+      },
+      "required": ["id", "productId", "email", "question", "status", "createdAt"]
+    },
+    "Offer": {
+      "title": "Offer",
+      "description": "Offer promotion",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "title": { "type": "string" },
+        "imageUrl": { "type": "string" },
+        "description": { "type": "string" },
+        "active": { "type": "boolean" }
+      },
+      "required": ["id", "title", "imageUrl", "active"]
+    },
+    "SocialLink": {
+      "title": "SocialLink",
+      "description": "Social media link",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "name": { "type": "string" },
+        "url": { "type": "string" },
+        "icon": { "type": "string" }
+      },
+      "required": ["id", "name", "url"]
+    },
+    "Mail": {
+      "title": "Mail",
+      "description": "Triggered emails/money receipts for orders",
+      "type": "object",
+      "properties": {
+        "to": { "type": "string" },
+        "message": { "type": "object" },
+        "userId": { "type": "string" },
+        "toEmail": { "type": "string" },
+        "createdAt": { "type": "string" }
+      },
+      "required": ["to", "message", "userId", "toEmail", "createdAt"]
+    }
+  },
+  "firestore": {
+    "users": {
+      "schema": "User",
+      "description": "Global user profiles"
+    },
+    "categories": {
+      "schema": "Category",
+      "description": "Categories catalog"
+    },
+    "brands": {
+      "schema": "Brand",
+      "description": "Brands catalog"
+    },
+    "products": {
+      "schema": "Product",
+      "description": "Products catalog"
+    },
+    "products/{productId}/reviews": {
+      "schema": "Review",
+      "description": "Product reviews"
+    },
+    "orders": {
+      "schema": "Order",
+      "description": "Customer orders"
+    },
+    "coupons": {
+      "schema": "Coupon",
+      "description": "Discount coupons"
+    },
+    "settings": {
+      "schema": "Settings",
+      "description": "Global settings"
+    },
+    "restocks": {
+      "schema": "Restock",
+      "description": "Restock requests"
+    },
+    "support": {
+      "schema": "Support",
+      "description": "Support tickets"
+    },
+    "offers": {
+      "schema": "Offer",
+      "description": "Promotions and offers"
+    },
+    "social_links": {
+      "schema": "SocialLink",
+      "description": "Social media links"
+    },
+    "mail": {
+      "schema": "Mail",
+      "description": "Triggered email receipts"
+    }
+  }
+}
